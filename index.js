@@ -1,13 +1,16 @@
 require("dotenv").config();
 const express = require("express");
+const { default: mongoose } = require("mongoose");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 const connectDB = require("./db/database");
-const User = require("./schema/user");
 connectDB();
+
+const User = require("./schema/user");
+const Exercise = require("./schema/exercise");
 
 morgan("tiny");
 app.use(cors());
@@ -43,6 +46,27 @@ app.get("/api/users", async (req, res) => {
     return res.status(200).json(filteredUsers);
   } catch (error) {
     return res.status(500).json({});
+  }
+});
+
+app.post("/api/users/:_id/exercises", async (req, res) => {
+  const objectId = new mongoose.Types.ObjectId(req.params._id);
+  const exercise = {
+    description: req.body.description,
+    duration: req.body.duration,
+    userId: objectId,
+  };
+
+  if (req.body.date) {
+    exercise.date = req.body.date;
+  }
+
+  const newExercise = new Exercise(exercise);
+  try {
+    return res.status(200).json(saveExercise);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.error({ error: error.message });
   }
 });
 

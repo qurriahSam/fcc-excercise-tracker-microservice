@@ -1,4 +1,4 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema, Types } = require("mongoose");
 
 const Exercise = new Schema({
   description: {
@@ -10,7 +10,6 @@ const Exercise = new Schema({
     type: Date,
     default: new Date(),
   },
-  userId: String,
 });
 
 module.exports = model("exercise", Exercise);

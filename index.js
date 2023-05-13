@@ -54,7 +54,6 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const exercise = {
     description: req.body.description,
     duration: req.body.duration,
-    userId: objectId,
   };
 
   if (req.body.date) {
@@ -63,7 +62,18 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   const newExercise = new Exercise(exercise);
   try {
-    return res.status(200).json(saveExercise);
+    const saveExercise = await newExercise.save();
+    const saveIdInUser = await User.findByIdAndUpdate(
+      objectId,
+      {
+        $push: { exercises: saveExercise._id },
+        $inc: { count: 1 },
+      },
+      { new: true, useFindAndModify: false }
+    );
+    const populate = await saveIdInUser.populate("exercises", "-__v");
+    //console.log(populate);
+    return res.status(200).json(populate);
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.error({ error: error.message });

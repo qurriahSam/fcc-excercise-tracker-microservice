@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const User = new Schema({
   username: String,
-  count: Number,
+  count: { type: Number, default: 0 },
   exercises: [{ type: Schema.Types.ObjectId, ref: "exercise" }],
 });
 

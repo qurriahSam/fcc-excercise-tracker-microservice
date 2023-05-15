@@ -66,13 +66,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     const saveIdInUser = await User.findByIdAndUpdate(
       objectId,
       {
-        $push: { exercise: saveExercise._id },
+        $push: { log: saveExercise._id },
         $inc: { count: 1 },
       },
       { new: true, useFindAndModify: false }
     );
-    const populate = await saveIdInUser.populate("exercise", "-__v");
-    //console.log(populate);
+    const populate = await saveIdInUser.populate("log", "-__v");
     return res.status(200).json(populate);
   } catch (error) {
     res.status(500).json({ error: error.message });

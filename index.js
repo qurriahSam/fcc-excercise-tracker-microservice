@@ -85,6 +85,16 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   }
 });
 
+app.get("/api/users/:_id/logs", async (req, res) => {
+  const objectId = new mongoose.Types.ObjectId(req.params._id);
+  try {
+    const user = await User.findById(objectId).populate("log", "-__v");
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log("Your app is listening on port " + listener.address().port);
 });

@@ -71,8 +71,14 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       },
       { new: true, useFindAndModify: false }
     );
-    const populate = await saveIdInUser.populate("log", "-__v");
-    return res.status(200).json(populate);
+    // const populate = await saveIdInUser.populate("log", "-__v");
+    return res.status(200).json({
+      _id: saveIdInUser._id,
+      username: saveIdInUser.username,
+      description: saveExercise.description,
+      duration: parseInt(saveExercise.duration),
+      date: saveExercise.date,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.error({ error: error.message });

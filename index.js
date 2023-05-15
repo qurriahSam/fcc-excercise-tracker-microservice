@@ -89,7 +89,20 @@ app.get("/api/users/:_id/logs", async (req, res) => {
   const objectId = new mongoose.Types.ObjectId(req.params._id);
   try {
     const user = await User.findById(objectId).populate("log", "-__v");
-    res.status(200).json(user);
+    let formatDate = user.log.map((exercise) => {
+      return {
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString(),
+      };
+    });
+
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      count: user.count,
+      logs: formatDate,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

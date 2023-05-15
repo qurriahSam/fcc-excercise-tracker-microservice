@@ -71,7 +71,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       },
       { new: true, useFindAndModify: false }
     );
-    const populate = await saveIdInUser.populate("exercises", "-__v");
+    const populate = await saveIdInUser.populate("exercise", "-__v");
     //console.log(populate);
     return res.status(200).json(populate);
   } catch (error) {

@@ -66,7 +66,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     const saveIdInUser = await User.findByIdAndUpdate(
       objectId,
       {
-        $push: { exercises: saveExercise._id },
+        $push: { exercise: saveExercise._id },
         $inc: { count: 1 },
       },
       { new: true, useFindAndModify: false }

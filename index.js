@@ -101,7 +101,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       _id: user._id,
       username: user.username,
       count: user.count,
-      logs: formatDate,
+      log: formatDate,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

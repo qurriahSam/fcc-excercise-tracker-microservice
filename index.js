@@ -12,6 +12,10 @@ connectDB();
 const User = require("./schema/user");
 const Exercise = require("./schema/exercise");
 
+const getLimitLog = require("./queries/getLimitLog");
+const getFromLog = require("./queries/getFromLog");
+const getToLog = require("./queries/getToLog");
+
 morgan("tiny");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -75,9 +79,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     return res.status(200).json({
       _id: saveIdInUser._id,
       username: saveIdInUser.username,
-      description: saveExercise.description,
-      duration: parseInt(saveExercise.duration),
-      date: saveExercise.date,
+      exercise: {
+        _id: saveExercise._id,
+        description: saveExercise.description,
+        duration: parseInt(saveExercise.duration),
+        date: saveExercise.date.toDateString(),
+      },
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -87,6 +94,19 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
 app.get("/api/users/:_id/logs", async (req, res) => {
   const objectId = new mongoose.Types.ObjectId(req.params._id);
+  console.log(req.query);
+
+  if (req.query.from) {
+    const fromLog = getFromLog(req.query.from, objectId, res);
+    return fromLog;
+  } else if (req.query.to) {
+    const toLog = getToLog(req.query.to, objectId, res);
+    return toLog;
+  } else if (req.query.limit) {
+    const limitLog = getLimitLog(req.query.limit, objectId, res);
+    return limitLog;
+  }
+
   try {
     const user = await User.findById(objectId).populate("log", "-__v");
     let formatDate = user.log.map((exercise) => {

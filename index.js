@@ -79,12 +79,9 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     return res.status(200).json({
       _id: saveIdInUser._id,
       username: saveIdInUser.username,
-      exercise: {
-        _id: saveExercise._id,
-        description: saveExercise.description,
-        duration: parseInt(saveExercise.duration),
-        date: saveExercise.date.toDateString(),
-      },
+      description: saveExercise.description,
+      duration: parseInt(saveExercise.duration),
+      date: saveExercise.date.toDateString(),
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
